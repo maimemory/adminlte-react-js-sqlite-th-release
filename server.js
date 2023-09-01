@@ -1,6 +1,6 @@
 import express from 'express';
 import mongoose from 'mongoose';
-import userCollection from './models/db-instance.js';
+import userCollection from './models/account-db-instance.js';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import bcrypt from 'bcrypt';
@@ -22,6 +22,8 @@ mongoose.connect(url)
     console.log(err);
 })
 
+// Account API
+
 app.get('/read', (req, res) => {
     userCollection.find()
     .then(result => {
@@ -33,7 +35,7 @@ app.get('/read', (req, res) => {
     })
 })
 
-app.post('/create', async (req, res) => {
+app.post('/register', async (req, res) => {
 
     let newUser = req.body;
 
@@ -73,6 +75,68 @@ app.post('/login', async (req, res) => {
         res.send({message: 'Incorrect Username'});
     }
 })
+
+// Memo API
+
+app.post('/readmemo', (req, res) => {
+
+    let { username } = req.body
+
+    userCollection.findOne({ username: username })
+    .then(result => {
+        console.log(result.record);
+        res.send(result.record);
+    })
+    .catch(err => {
+        console.log(err);
+    })
+})
+
+app.post('/creatememo', (req, res) => {
+
+    let { username, newMemo } = req.body;
+
+    userCollection.updateOne({ username: username }, { $push: { record: { memo: newMemo }}})
+    .then(result => {
+        console.log(result);
+        res.send(result);
+    })
+    .catch(err => {
+        console.log(err);
+    })
+})
+
+app.post('/deletememo/:id', (req, res) => {
+
+    const id = req.params.id;
+    let { username } = req.body;
+
+    userCollection.updateOne({ username: username }, { $pull: { record: { _id: id }}})
+    .then(result => {
+        console.log(result);
+        res.send(result);
+    })
+    .catch(err => {
+        console.log(err);
+        res.send(err);
+    })
+})
+
+// app.post('/updatememo/:id', (req, res) => {
+
+//     const id = req.params.id;
+//     let { username } = req.body;
+
+//     userCollection.updateOne({ username: username }, { $set: { record: { isDone: true }}})
+//     .then(result => {
+//         console.log(result);
+//         res.send(result);
+//     })
+//     .catch(err => {
+//         console.log(err);
+//         res.send(err);
+//     })
+// })
 
 app.listen(1000, () => {
     console.log('Server is running at http://localhost:1000')
