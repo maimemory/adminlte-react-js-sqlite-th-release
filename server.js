@@ -122,21 +122,45 @@ app.post('/deletememo/:id', (req, res) => {
     })
 })
 
-// app.post('/updatememo/:id', (req, res) => {
+app.post('/updatememo/:id', (req, res) => {
 
-//     const id = req.params.id;
-//     let { username } = req.body;
+    const id = req.params.id;
+    let { username, oldIsDone } = req.body;
 
-//     userCollection.updateOne({ username: username }, { $set: { record: { isDone: true }}})
-//     .then(result => {
-//         console.log(result);
-//         res.send(result);
-//     })
-//     .catch(err => {
-//         console.log(err);
-//         res.send(err);
-//     })
-// })
+    userCollection.updateOne({ 
+        username: username,
+        record: { $elemMatch: { _id: id }}
+     }, 
+     { $set: { 'record.$.isDone': !oldIsDone}})
+    .then(result => {
+        console.log(result);
+        res.send(result);
+    })
+    .catch(err => {
+        console.log(err);
+        res.send(err);
+    })
+})
+
+app.post('/editmemo/:id', (req, res) => {
+
+    const id = req.params.id;
+    let { username, newMemo } = req.body;
+
+    userCollection.updateOne({
+        username: username,
+        record: { $elemMatch: { _id: id }}
+    },
+    { $set: { 'record.$.memo': newMemo }})
+    .then(result => {
+        console.log(result);
+        res.send(result);
+    })
+    .catch(err => {
+        console.log(err);
+        res.send(err);
+    })
+})
 
 app.listen(1000, () => {
     console.log('Server is running at http://localhost:1000')
