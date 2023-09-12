@@ -1,6 +1,6 @@
 import express from 'express';
-import mongoose from 'mongoose';
-import userCollection from './models/account-db-instance.js';
+import account from './models/account.js';
+import memoTable from './models/memo.js';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import bcrypt from 'bcrypt';
@@ -10,22 +10,10 @@ app.use(bodyParser.urlencoded({extended:false}));
 app.use(express.json());
 app.use(cors());
 
-const url = 'mongodb://vsmqtt.space:2717'
-
-// mongoose.set('debug', true);
-
-mongoose.connect(url)
-.then(() => {
-    console.log('Database Connected!');
-})
-.catch(err => {
-    console.log(err);
-})
-
 // Account API
 
-app.get('/read', (req, res) => {
-    userCollection.find()
+app.get('/read', async (req, res) => {
+    await account.findAll()
     .then(result => {
         console.log(result);
         res.send(result);
@@ -39,14 +27,14 @@ app.post('/register', async (req, res) => {
 
     let newUser = req.body;
 
-    if(await userCollection.findOne({username: req.body.username})){
+    if(await account.findOne({where: {username: req.body.username}})){
         res.send({message: 'User was already registered'});
     }
     else{
         req.body.password = bcrypt.hashSync(req.body.password, 8);
         newUser = {...newUser, password: req.body.password};
 
-        userCollection.create(newUser)
+        await account.create(newUser)
         .then(result => {
             console.log(result);
             res.send(result);
@@ -61,7 +49,7 @@ app.post('/login', async (req, res) => {
 
     let {username, password} = req.body;
 
-    let result = await userCollection.findOne({username: username})
+    let result = await account.findOne({where: {username: username}})
     if(result !== null){
         if(bcrypt.compareSync(password, result.password)){
             console.log(result);
@@ -78,88 +66,72 @@ app.post('/login', async (req, res) => {
 
 // Memo API
 
-app.post('/readmemo', (req, res) => {
+app.post('/readmemo', async (req, res) => {
 
     let { username } = req.body
 
-    userCollection.findOne({ username: username })
+    const currentUser = await account.findOne({where: { username: username }});
+    await memoTable.findAll({where: { accountId: currentUser.id }})
     .then(result => {
-        console.log(result.record);
-        res.send(result.record);
+        console.log(result);
+        res.send(result);
     })
+    // memoTable.findAll({include: account, where: {accountId: 1}})
+    // .then(result => {
+    //     console.log(result);
+    //     res.send(result);
+    // })
     .catch(err => {
         console.log(err);
     })
 })
 
-app.post('/creatememo', (req, res) => {
+app.post('/creatememo', async (req, res) => {
 
     let { username, newMemo } = req.body;
 
-    userCollection.updateOne({ username: username }, { $push: { record: { memo: newMemo }}})
-    .then(result => {
-        console.log(result);
-        res.send(result);
+    const currentUser = await account.findOne({where: { username: username }});
+    await memoTable.create({ 
+        memo: newMemo, 
+        isDone : false, 
+        accountId: currentUser.id
+    })
+    .then(account => {
+        console.log(account);
+        res.send(account);
     })
     .catch(err => {
         console.log(err);
     })
 })
 
-app.post('/deletememo/:id', (req, res) => {
-
+app.delete('/deletememo/:id', async (req, res) => {
+    
     const id = req.params.id;
-    let { username } = req.body;
 
-    userCollection.updateOne({ username: username }, { $pull: { record: { _id: id }}})
-    .then(result => {
-        console.log(result);
-        res.send(result);
-    })
-    .catch(err => {
-        console.log(err);
-        res.send(err);
-    })
+    const result = await memoTable.destroy({where: { id: id }});
+    if(result.affectedRows === 0){
+        return res.status(404).json({ message: 'No memo with that ID'});
+    }
+    return res.status(200).json({ message: result});
 })
 
-app.post('/updatememo/:id', (req, res) => {
+app.post('/updatememo/:id', async (req, res) => {
 
     const id = req.params.id;
-    let { username, oldIsDone } = req.body;
+    let { oldIsDone } = req.body;
 
-    userCollection.updateOne({ 
-        username: username,
-        record: { $elemMatch: { _id: id }}
-     }, 
-     { $set: { 'record.$.isDone': !oldIsDone}})
-    .then(result => {
-        console.log(result);
-        res.send(result);
-    })
-    .catch(err => {
-        console.log(err);
-        res.send(err);
-    })
+    const result = await memoTable.update({isDone: !oldIsDone}, {where: {id: id}});
+    return res.status(200).json({ message: result});
 })
 
-app.post('/editmemo/:id', (req, res) => {
+app.post('/editmemo/:id', async (req, res) => {
 
     const id = req.params.id;
-    let { username, newMemo } = req.body;
+    let { newMemo } = req.body;
 
-    userCollection.updateOne({
-        username: username,
-        record: { $elemMatch: { _id: id }}
-    },
-    { $set: { 'record.$.memo': newMemo }})
-    .then(result => {
-        console.log(result);
-        res.send(result);
-    })
-    .catch(err => {
-        console.log(err);
-        res.send(err);
-    })
+    const result = await memoTable.update({memo: newMemo}, {where: {id: id}});
+    return res.status(200).json({ message: result});
 })
 
 app.listen(1000, () => {
