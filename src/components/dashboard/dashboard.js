@@ -30,13 +30,13 @@ function Dashboard() {
   const showMemoList = memoList.map((item, index) => {
 
     const deleteMemo = (id) => {
-      axios.post(`http://localhost:1000/deletememo/${item._id}`, {
+      axios.delete(`http://localhost:1000/deletememo/${item.id}`, {
         username : localStorage.getItem('currentUser')
       })
       .then(result => {
         console.log(result.data);
         setMemoList(memoList.filter(item => {
-          return item._id !== id;
+          return item.id !== id;
         }))
       })
     }
@@ -59,7 +59,7 @@ function Dashboard() {
           //   created: Date()
           // }
   
-          return axios.post(`http://localhost:1000/editmemo/${item._id}`,{
+          return axios.post(`http://localhost:1000/editmemo/${item.id}`,{
             username : localStorage.getItem('currentUser'),
             newMemo : inputText
           })
@@ -81,7 +81,7 @@ function Dashboard() {
       }).then(result => {
         console.log(result);
         if (result.isConfirmed) {
-          setSave(~save);
+          setSave(!save);
           Swal.fire(
             "Save Successfully!",
             "Redirect to Dashboard!",
@@ -92,14 +92,14 @@ function Dashboard() {
     }
 
     const setMemoStatus = (id) => {
-      axios.post(`http://localhost:1000/updatememo/${item._id}`, {
+      axios.post(`http://localhost:1000/updatememo/${item.id}`, {
         username : localStorage.getItem('currentUser'),
         oldIsDone : item.isDone
       })
       .then(result => {
         console.log(result.data);
         setMemoList(memoList.filter(item => {
-          if(item._id === id){
+          if(item.id === id){
             item.isDone === true ? item.isDone = false: item.isDone = true;
           }
           return item;
@@ -108,26 +108,34 @@ function Dashboard() {
     }
 
     return(
-      <tr key={item._id}>
+      <tr key={item.id}>
         <td>
           <span>{item.memo}</span>
           <br />
           <small>{item.created}</small>
         </td>
-        <td className="project-state" onClick={() => setMemoStatus(item._id)}>
+        <td className="project-state" onClick={() => setMemoStatus(item.id)}>
           {(item.isDone) ? 
           <span className="badge badge-success" style={{padding: 10}}>Success</span> : 
           <span className="badge badge-danger" style={{padding: 10}}>Incomplete</span>}
         </td>
         <td className="project-actions text-right">
-          <span className="btn btn-info btn-sm" onClick={() => editMemo(item._id)}>
+          <button 
+            className="btn btn-info btn-sm" 
+            onClick={() => editMemo(item.id)} 
+            style={{width: 70}}
+          >
             <i className="fas fa-pencil-alt"></i>
             Edit
-          </span>
-          <span className="btn btn-danger btn-sm" onClick={() => deleteMemo(item._id)}>
+          </button>
+          <button 
+            className="btn btn-danger btn-sm" 
+            onClick={() => deleteMemo(item.id)} 
+            style={{width: 70}}
+          >
             <i className="fas fa-trash"></i>
             Delete
-          </span>
+          </button>
         </td>
       </tr>
     )
