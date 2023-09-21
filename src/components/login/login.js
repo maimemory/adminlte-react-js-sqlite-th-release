@@ -16,7 +16,6 @@ function Login() {
       await axios
         .post("http://vsmqtt.space:1000/login", account)
         .then((result) => {
-          console.log(result.data);
           if (result.data.message === "Incorrect Username") {
             Swal.fire({
               icon: "error",

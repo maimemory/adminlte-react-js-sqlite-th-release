@@ -18,7 +18,6 @@ function Register() {
       await axios
         .post("http://vsmqtt.space:1000/register", user)
         .then((result) => {
-          console.log(result.data);
           if(result.data.message === "User was already registered"){
             Swal.fire({
               icon: "error",

@@ -19,7 +19,6 @@ function Dashboard() {
       username : localStorage.getItem('currentUser')
     })
     .then(result => {
-      console.log(result);
       setMemoList(result.data)
     })
     .catch(err => {
@@ -34,7 +33,6 @@ function Dashboard() {
         username : localStorage.getItem('currentUser')
       })
       .then(result => {
-        console.log(result.data);
         setMemoList(memoList.filter(item => {
           return item.id !== id;
         }))
@@ -63,15 +61,6 @@ function Dashboard() {
             username : localStorage.getItem('currentUser'),
             newMemo : inputText
           })
-          .then(result => {
-            console.log(result.data);
-            // setMemoList(memoList.filter(item => {
-            //   if(item._id === id){
-            //     item.memo = newMemo;
-            //   }
-            //   return item;
-            // }))
-          })
           .catch(err => {
             console.log(err);
             Swal.showValidationMessage(`Request failed: ${err}`);
@@ -79,7 +68,6 @@ function Dashboard() {
         },
         allowOutsideClick: () => !Swal.isLoading(),
       }).then(result => {
-        console.log(result);
         if (result.isConfirmed) {
           setSave(!save);
           Swal.fire(
@@ -97,7 +85,6 @@ function Dashboard() {
         oldIsDone : item.isDone
       })
       .then(result => {
-        console.log(result.data);
         setMemoList(memoList.filter(item => {
           if(item.id === id){
             item.isDone === true ? item.isDone = false: item.isDone = true;
@@ -163,10 +150,6 @@ function Dashboard() {
           username : localStorage.getItem('currentUser'),
           newMemo : inputText
         })
-        .then(result => {
-          // setMemoList([...memoList, newMemo]);
-          console.log(result);
-        })
         .catch(err => {
           console.log(err);
           Swal.showValidationMessage(`Request failed: ${err}`);
@@ -174,7 +157,6 @@ function Dashboard() {
       },
       allowOutsideClick: () => !Swal.isLoading(),
     }).then(result => {
-      console.log(result);
       if (result.isConfirmed) {
         setSave(~save);
         Swal.fire(
