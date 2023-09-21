@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/adminlte-react-js-sqlite-th-release/static/css/main.e6c13ad2.css",
+    "main.js": "/adminlte-react-js-sqlite-th-release/static/js/main.dd6e0b71.js",
+    "static/js/787.9b6ce647.chunk.js": "/adminlte-react-js-sqlite-th-release/static/js/787.9b6ce647.chunk.js",
+    "index.html": "/adminlte-react-js-sqlite-th-release/index.html",
+    "main.e6c13ad2.css.map": "/adminlte-react-js-sqlite-th-release/static/css/main.e6c13ad2.css.map",
+    "main.dd6e0b71.js.map": "/adminlte-react-js-sqlite-th-release/static/js/main.dd6e0b71.js.map",
+    "787.9b6ce647.chunk.js.map": "/adminlte-react-js-sqlite-th-release/static/js/787.9b6ce647.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.e6c13ad2.css",
+    "static/js/main.dd6e0b71.js"
+  ]
+}
