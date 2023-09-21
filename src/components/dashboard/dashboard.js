@@ -15,7 +15,7 @@ function Dashboard() {
   }
   
   useEffect(() => {
-    axios.post('http://localhost:1000/readmemo', {
+    axios.post('http://vsmqtt.space:1000/readmemo', {
       username : localStorage.getItem('currentUser')
     })
     .then(result => {
@@ -30,7 +30,7 @@ function Dashboard() {
   const showMemoList = memoList.map((item, index) => {
 
     const deleteMemo = (id) => {
-      axios.delete(`http://localhost:1000/deletememo/${item.id}`, {
+      axios.delete(`http://vsmqtt.space:1000/deletememo/${item.id}`, {
         username : localStorage.getItem('currentUser')
       })
       .then(result => {
@@ -43,7 +43,7 @@ function Dashboard() {
 
     const editMemo = (id) => {
       Swal.fire({
-        title: "Edit Your Memo",
+        title: "แก้ไขบันทึก",
         input: "text",
         inputAttributes: {
           autocapitalize: "off",
@@ -59,7 +59,7 @@ function Dashboard() {
           //   created: Date()
           // }
   
-          return axios.post(`http://localhost:1000/editmemo/${item.id}`,{
+          return axios.post(`http://vsmqtt.space:1000/editmemo/${item.id}`,{
             username : localStorage.getItem('currentUser'),
             newMemo : inputText
           })
@@ -83,8 +83,8 @@ function Dashboard() {
         if (result.isConfirmed) {
           setSave(!save);
           Swal.fire(
-            "Save Successfully!",
-            "Redirect to Dashboard!",
+            "บันทึกข้อมูลสำเร็จ!",
+            "กำลังไปยังหน้า Dashboard!",
             "success"
           );
         }
@@ -92,7 +92,7 @@ function Dashboard() {
     }
 
     const setMemoStatus = (id) => {
-      axios.post(`http://localhost:1000/updatememo/${item.id}`, {
+      axios.post(`http://vsmqtt.space:1000/updatememo/${item.id}`, {
         username : localStorage.getItem('currentUser'),
         oldIsDone : item.isDone
       })
@@ -116,8 +116,8 @@ function Dashboard() {
         </td>
         <td className="project-state" onClick={() => setMemoStatus(item.id)}>
           {(item.isDone) ? 
-          <span className="badge badge-success" style={{padding: 10}}>Success</span> : 
-          <span className="badge badge-danger" style={{padding: 10}}>Incomplete</span>}
+          <span className="badge badge-success" style={{padding: 10}}>สำเร็จ</span> : 
+          <span className="badge badge-danger" style={{padding: 10}}>ยังไม่ได้ทำ</span>}
         </td>
         <td className="project-actions text-right">
           <button 
@@ -126,7 +126,7 @@ function Dashboard() {
             style={{width: 70}}
           >
             <i className="fas fa-pencil-alt"></i>
-            Edit
+            แก้ไข
           </button>
           <button 
             className="btn btn-danger btn-sm" 
@@ -134,7 +134,7 @@ function Dashboard() {
             style={{width: 70}}
           >
             <i className="fas fa-trash"></i>
-            Delete
+            ลบ
           </button>
         </td>
       </tr>
@@ -143,7 +143,7 @@ function Dashboard() {
 
   const createMemo = () => {
     Swal.fire({
-      title: "Submit Your Memo",
+      title: "พิมพ์ข้อความที่ต้องการ",
       input: "text",
       inputAttributes: {
         autocapitalize: "off",
@@ -159,7 +159,7 @@ function Dashboard() {
         //   created: Date()
         // }
 
-        return axios.post(`http://localhost:1000/creatememo`,{
+        return axios.post(`http://vsmqtt.space:1000/creatememo`,{
           username : localStorage.getItem('currentUser'),
           newMemo : inputText
         })
@@ -178,8 +178,8 @@ function Dashboard() {
       if (result.isConfirmed) {
         setSave(~save);
         Swal.fire(
-          "Save Successfully!",
-          "Redirect to Dashboard!",
+          "บันทึกข้อมูลสำเร็จ!",
+          "กำลังไปยังหน้า Dashboard!",
           "success"
         );
       }
@@ -193,15 +193,15 @@ function Dashboard() {
         {/* Default box */}
         <div className="card" style={{ marginTop: 10 }}>
           <div className="card-header">
-            <h3 className="card-title">Projects</h3>
+            <h3 className="card-title">บันทึก</h3>
           </div>
           <div className="card-body p-0">
             <table className="table table-striped projects">
               <thead>
                 <tr>
-                  <th style={{ width: "20%" }}>Project Name</th>
+                  <th style={{ width: "20%" }}>#</th>
                   <th style={{ width: "8%" }} className="text-center">
-                    Status
+                    สถานะ
                   </th>
                   <th style={{ width: "20%" }}></th>
                 </tr>
@@ -219,7 +219,7 @@ function Dashboard() {
           style={{ marginTop: 10 }}
           onClick={createMemo}
         >
-          New Task
+          เพิ่มบันทึก
         </button>
       </section>
       {/* /.content */}

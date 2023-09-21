@@ -6,7 +6,7 @@ import Register from "./components/register/register";
 import Dashboard from "./components/dashboard/dashboard";
 import Footer from "./components/footer/footer";
 
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, HashRouter } from "react-router-dom";
 
 const Context = createContext();
 
@@ -19,7 +19,7 @@ function App() {
 
   return (
     <Context.Provider value={{ isLogin, setIsLogin, account, setAccount}}>
-      <BrowserRouter>
+      <HashRouter>
         {localStorage.getItem('alreadyLogin') && <Header/>}
         {localStorage.getItem('alreadyLogin') && <Menu/>}
         <Routes>
@@ -30,7 +30,7 @@ function App() {
           <Route exact={true} path="*" element={<Navigate to="/login" />}/>
         </Routes>
         <Footer/>
-      </BrowserRouter>
+      </HashRouter>
     </Context.Provider>
   );
 }

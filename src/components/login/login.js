@@ -14,25 +14,25 @@ function Login() {
 
     if (account.username !== "" && account.password !== "") {
       await axios
-        .post("http://localhost:1000/login", account)
+        .post("http://vsmqtt.space:1000/login", account)
         .then((result) => {
           console.log(result.data);
           if (result.data.message === "Incorrect Username") {
             Swal.fire({
               icon: "error",
               title: "Error!",
-              text: "Incorrect Username!",
+              text: "ชื่อผู้ใช้งานไม่ถูกต้อง!",
             });
           } else if (result.data.message === "Incorrect Password") {
             Swal.fire({
               icon: "error",
               title: "Error!",
-              text: "Incorrect Password!",
+              text: "รหัสผ่านไม่ถูกต้อง!",
             });
           } else {
             Swal.fire(
-              "Login Successfully!",
-              "Redirect to Dashboard!",
+              "เข้าสู่ระบบสำเร็จ!",
+              "กำลังไปยังหน้า Dashboard!",
               "success"
             );
             setIsLogin(true);
@@ -52,7 +52,7 @@ function Login() {
       Swal.fire({
         icon: "error",
         title: "Error!",
-        text: "Username or password is empty!",
+        text: "กรุณากรอกข้อมูลให้ครบถ้วน!",
       });
     }
   };
@@ -64,11 +64,11 @@ function Login() {
         <div className="card card-outline card-primary">
           <div className="card-header text-center">
             <a href="../../index2.html" className="h1">
-              <b>React</b>JS
+              <b>Memo</b>JS
             </a>
           </div>
           <div className="card-body">
-            <p className="login-box-msg">Sign in to start your session</p>
+            <p className="login-box-msg">กรอกข้อมูลเพื่อเข้าสู่ระบบ</p>
             <form onSubmit={(e) => signIn(e)}>
               <div className="input-group mb-3">
                 <input
@@ -105,7 +105,7 @@ function Login() {
               <div className="row">
                 <div className="col-12">
                   <button type="submit" className="btn btn-primary btn-block">
-                    Sign In
+                    เข้าสู่ระบบ
                   </button>
                 </div>
               </div>
@@ -115,7 +115,7 @@ function Login() {
                     className="btn btn-default btn-block"
                     onClick={() => navigate("/register")}
                   >
-                    Register
+                    ลงทะเบียน
                   </button>
                 </div>
               </div>

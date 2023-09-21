@@ -16,20 +16,20 @@ function Register() {
 
     if (user.username !== "" && user.password !== "") {
       await axios
-        .post("http://localhost:1000/register", user)
+        .post("http://vsmqtt.space:1000/register", user)
         .then((result) => {
           console.log(result.data);
           if(result.data.message === "User was already registered"){
             Swal.fire({
               icon: "error",
               title: "Error!",
-              text: "User was already registered!",
+              text: "มีชื่อผู้ใช้งานนี้แล้ว!",
             });
           }
           else{
             Swal.fire(
-              "Register Successfully!",
-              "Redirect to Sign In!",
+              "ลงทะเบียนสำเร็จ!",
+              "กำลังไปยังหน้า Dashboard!",
               "success"
             );
             navigate("/login");
@@ -47,7 +47,7 @@ function Register() {
       Swal.fire({
         icon: "error",
         title: "Error!",
-        text: "Username or password is empty!",
+        text: "กรุณากรอกข้อมูลให้ครบถ้วน!",
       });
     }
   };
@@ -59,11 +59,11 @@ function Register() {
         <div className="card card-outline card-primary">
           <div className="card-header text-center">
             <a href="../../index2.html" className="h1">
-              <b>React</b>JS
+              <b>Memo</b>JS
             </a>
           </div>
           <div className="card-body">
-            <p className="login-box-msg">Sign in to start your session</p>
+            <p className="login-box-msg">กรอกข้อมูลเพื่อลงทะเบียน</p>
             <form onSubmit={e => createUser(e)}>
               <div className="input-group mb-3">
                 <input
@@ -100,7 +100,7 @@ function Register() {
               <div className="row">
                 <div className="col-12">
                   <button type="submit" className="btn btn-primary btn-block">
-                    Register
+                    ลงทะเบียน
                   </button>
                 </div>
               </div>
@@ -110,7 +110,7 @@ function Register() {
                     className="btn btn-default btn-block"
                     onClick={() => navigate("/login")}
                   >
-                    Cancel
+                    ยกเลิก
                   </button>
                 </div>
               </div>
